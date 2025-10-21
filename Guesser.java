@@ -65,7 +65,15 @@ public class Guesser {
         // As long as it is not a valid reply (one of "T" and "F")
         // write an error message, and read a new reply.
         // When you have gotten a valid reply, return it.
-        return reply;
+        do {
+            reply = System.console().readLine();
+            if (reply.equalsIgnoreCase("T") || reply.equalsIgnoreCase("F")) {
+                break;
+            }
+            System.out.println("Incorrect answer. Please answer T for true, and F for false");
+        } while (true);
+
+        return reply.toUpperCase();
     }
 
     private void doGuesses() {
