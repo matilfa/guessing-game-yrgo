@@ -1,4 +1,4 @@
-
+Jag siktar på VG.
 
 1. Kommandot git pull gör samma sak som git fetch plus git merge, det vill säga hämtar dom senaste ändringarna från ett remote repository och uppdaterar ditt lokala repository med dessa ändringar. Kommandot git push skickar ditt lokala git repository till ett remote repository (som exempelvis kan finnas på GitHub, Bitbucket m.fl.).
 
@@ -20,4 +20,13 @@
 		Exempel: Jag har experimenterat och testat massa kod i ett projekt för att se hur saker fungerar, men vill nu återställa allt och gå tillbaka till originalversionen (jag har inte committat några av mina ändringar, men jag har ändrat i flera filer). Då skriver jag ‘git reset --hard HEAD’.
 
 Jag har gjort mina exempel på rollbacks i en separat branch (“rollback-example”) som ligger på min github. Där syns git revert och git restore.
+
+Extrafråga, git rebase:
+
+Vanligtvis när man ska utveckla en specifik feature, så gör man detta på en separat branch, som är till för just den featuren. När då samtidigt andra utvecklare lägger till fler nya funktionaliteter till main så behöver man hålla sin egen branch uppdaterad mot main under tiden som man jobbar på sin feature. Om man ständigt gör git pull (dvs fetch + merge) blir det lätt rörigt i commithistoriken på sin branch. 
+
+Exempel: 
+Jag och några fler personer håller på att utveckla en webbapplikation, med stöd för skapande av användare, inloggning, chatt/forum m.m. Jag har just nu i uppgift att utveckla en funktion för att man ska kunna kommentera användares foruminlägg. Detta gör jag på branchen ‘add-commenting’. Jag jobbar på och committar ändringar regelbundet. Om jag varje gång jag vill hålla mig uppdaterad mot main kör git pull så blir det snabbt rörigt i historiken, eftersom main’s commithistorik bakas in i min branchhistorik när jag kör git log. Det blir även en mergecommit högst upp i historiken varje gång. Om jag istället för git pull gör en git rebase, blir det som om jag “klipper ut” alla mina commits som jag gjort på min branch, sen uppdaterar historiken med main’s commits, och därefter “klistrar in” mina commits igen, högst upp i historiken. Då blir det en linjär commithistorik, där jag håller mina branchcommits samlade för sig. Det blir ofta tydligare att göra på detta vis när man jobbar på en feature-branch, särskilt inför en pull request till main, som då kan se tydligt vad branchen har gjort. Så när jag är klar med min nya feature skriver jag ‘git rebase origin/main’ (och löser eventuella konflikter, sedan fortsätter rebasen med ‘git rebase --continue’), för att få en prydlig och linjär historik inför en pull request till main. 
+ 
+Däremot om någon mer jobbar på samma branch som jag, kan rebase vara problematiskt, eftersom dom commits som man “klistrar in” högst upp i trädet är tekniskt sett nya commits, med nya hashnummer (men med samma meddelanden). Så om jag har gjort en rebase mot main på min branch, och någon annan arbetar lokalt med den branchen (som dom har hämtat före att jag pushat min rebase:ade branch till remote-branchen), så kommer inte längre historiken stämma överens när hen försöker pusha sitt arbete till remote-branchen. Så om man ska samarbeta på en och samma branch (remote) är det viktigt att man kommunicerar mellan sig, för att kunna synkronisera sitt arbete. 
 
